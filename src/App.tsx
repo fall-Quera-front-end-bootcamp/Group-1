@@ -1,7 +1,14 @@
+// Import the necessary components from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AuthLayout from "./components/layout/authLayout.tsx/AuthLayout";
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold underline bg-green-400">
-      Hello world!
-    </h1>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<AuthLayout />} />
+        {/* Add more routes as needed */}
+      </Routes>
+    </Router>
+  );
 }
