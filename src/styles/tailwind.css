@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.clip-polygon {
+  clip-path: polygon(0 68%, 100% 34%, 100% 100%, 0 100%);
+  background: linear-gradient(269.55deg, #06846f 0.35%, #54bee8 103.4%);
+}
