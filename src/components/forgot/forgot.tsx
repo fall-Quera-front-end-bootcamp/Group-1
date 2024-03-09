@@ -1,14 +1,27 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { ForgetPasswordData } from "../../types/types";
+import { forgetPassword } from "../../services/userService";
 
-const Forgot = () => {
+const Forgot: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+  } = useForm<ForgetPasswordData>();
+
+  const onSubmit = async (data: ForgetPasswordData) => {
+    const userData = {
+      email: data.email,
+    };
+    try {
+      const result = await forgetPassword(userData);
+      console.log(result.data);
+    } catch (e) {
+      console.log("Error Occured!");
+      console.log(e);
+    }
+  };
 
   return (
     <div className="relative z-10 flex justify-center items-center ">
@@ -28,7 +41,6 @@ const Forgot = () => {
             <input
               type="email"
               id="email"
-              name="email"
               className="w-full px-4 py-1 border rounded-lg"
               required
               {...register("email")}
@@ -43,10 +55,7 @@ const Forgot = () => {
             </button>
           </div>
           <div>
-            <a
-              href="http://localhost:3000/login"
-              className="text-teal-500 pt-4"
-            >
+            <a href="/" className="text-teal-500 pt-4">
               بازگشت
             </a>
           </div>

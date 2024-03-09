@@ -1,14 +1,37 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../services/userService";
+import { LoginFormData, LoginResponse } from "./../../types/types";
 
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+  } = useForm<LoginFormData>();
+  const navigate = useNavigate();
+  // const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data);
+
+  const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
+    const userData = {
+      username: data.username,
+      password: data.password,
+    };
+    try {
+      // const result = await axios.post(
+      //   "http://185.8.174.74:8000/accounts/login/",
+      //   userData
+      // );
+      const result = await login(userData);
+      const loginResponseData = result.data as LoginResponse;
+      localStorage.setItem("refresh", loginResponseData.refresh);
+      localStorage.setItem("access", loginResponseData.access);
+      navigate("/dashboard/workspaces");
+    } catch (e) {
+      console.log("Error Occured!");
+      console.log(e);
+    }
+  };
 
   return (
     <div className="relative z-10 flex justify-center items-center ">
@@ -28,7 +51,6 @@ const LoginForm = () => {
             <input
               type="text"
               id="username"
-              name="username"
               className="w-full px-4 py-1 mb-2 border rounded-lg"
               required
               {...register("username")}
@@ -44,7 +66,6 @@ const LoginForm = () => {
             <input
               type="password"
               id="password"
-              name="password"
               className="w-full px-4 py-1 border rounded-lg"
               required
               {...register("password")}
@@ -52,7 +73,7 @@ const LoginForm = () => {
           </div>
           <div className="mb-3 text-right">
             <a
-              href="http://localhost:3000/forgot"
+              href="/forgot"
               className="font-medium text-xs leading-17 hover:underline"
             >
               رمز عبور خود را فراموش کرده اید ؟
@@ -66,7 +87,7 @@ const LoginForm = () => {
           </button>
           <div className="flex justify-center items-center">
             <a
-              href="http://localhost:3000/register"
+              href="/register"
               className="text-teal-500 mr-2 text-base leading-tight hover:text-green-600"
             >
               ثبت نام
