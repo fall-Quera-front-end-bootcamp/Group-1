@@ -3,7 +3,7 @@ import icons from "../../utils/icons/icons";
 import ProfilePicture from "../common/profilePicture/profilePicture";
 
 const ListComponent = () => {
-  const [showTasks, setShowTasks] = useState(false); 
+  const [showTasks, setShowTasks] = useState(false);
   const toggleTasks = () => {
     setShowTasks(!showTasks);
   };
@@ -13,16 +13,15 @@ const ListComponent = () => {
     day: "numeric",
     month: "long",
   });
-  
 
   return (
     <div dir="rtl" className="flex flex-col w-[986px] mt-4">
-      <div className="flex items-center " >
+      <div className="flex items-center ">
         <div className="flex items-center w-[493px]">
           {icons.chevron_down_circle("#323232", "20px")}
           <button
             className="bg-pink-500 text-white border rounded-md py-1 px-3"
-            onClick={toggleTasks} 
+            onClick={toggleTasks}
           >
             pending
           </button>
@@ -34,7 +33,7 @@ const ListComponent = () => {
           <p>توضیحات</p>
         </div>
       </div>
-      {showTasks && ( 
+      {showTasks && (
         <div>
           <div className="flex items-center justify-between rounded-md  h-[47px] mt-5">
             <div className="flex items-center w-[493px]">
@@ -59,9 +58,7 @@ const ListComponent = () => {
               </div>
               <p>{formattedDate}</p>
               <span>{icons.flag("red", "20px")}</span>
-              <span className="ml-5">
-                {icons.paragraph("#BDC0C6", "20px")}
-              </span>
+              <span className="ml-5">{icons.paragraph("#BDC0C6", "20px")}</span>
             </div>
           </div>
 
@@ -82,9 +79,7 @@ const ListComponent = () => {
               </div>
               <p>{formattedDate}</p>
               <span>{icons.flag("red", "20px")}</span>
-              <span className="ml-5">
-                {icons.paragraph("#BDC0C6", "20px")}
-              </span>
+              <span className="ml-5">{icons.paragraph("#BDC0C6", "20px")}</span>
             </div>
           </div>
         </div>
