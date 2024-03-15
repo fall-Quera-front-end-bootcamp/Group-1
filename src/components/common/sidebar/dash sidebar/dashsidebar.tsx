@@ -158,32 +158,24 @@ const Dashsidebar: React.FC = () => {
                               ساختن پروژه جدید
                             </button>
                           ) : (
-                            item.projects.map(
-                              (
-                                element: {
-                                  id: React.Key | null | undefined;
-                                  name: string;
-                                },
-                                indexx: any
-                              ) => (
-                                <li
-                                  key={element.id}
-                                  className="hover:bg-[#FAFAFA] focus:bg-[#e9f9ff] rounded py-2 relative flex items-center justify-between"
-                                  onMouseEnter={() =>
-                                    setHoveredSubItem(element.id as string)
-                                  }
-                                  onMouseLeave={() => setHoveredSubItem(null)}
-                                >
-                                  {element.name}
-                                  {hoveredItem === item.id &&
-                                    hoveredSubItem === element.id && (
-                                      <button className="px-3">
-                                        {icons.dots("#323232", "20px")}
-                                      </button>
-                                    )}
-                                </li>
-                              )
-                            )
+                            item.projects.map((project: any) => (
+                              <li
+                                key={project.id}
+                                className="hover:bg-[#FAFAFA] focus:bg-[#e9f9ff] rounded py-2 relative flex items-center justify-between"
+                                onMouseEnter={() =>
+                                  setHoveredSubItem(project.id as string)
+                                }
+                                onMouseLeave={() => setHoveredSubItem(null)}
+                              >
+                                {project.name}
+                                {hoveredItem === item.id &&
+                                  hoveredSubItem === project.id && (
+                                    <button className="px-3">
+                                      {icons.dots("#323232", "20px")}
+                                    </button>
+                                  )}
+                              </li>
+                            ))
                           )}
                         </ul>
                       )}

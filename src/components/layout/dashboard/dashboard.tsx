@@ -13,7 +13,6 @@ const Dashboard = () => {
   }, []);
 
   const currentUrl = useLocation();
-  console.log(currentUrl);
 
   return (
     <div className="flex relative " dir="rtl">

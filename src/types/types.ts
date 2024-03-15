@@ -46,7 +46,7 @@ export interface WorkSpacesData {
   id: string;
   name: string;
   color: string;
-  projects:any;
+  projects: any;
 }
 export interface WorkSpacesPost {
   name: string;
@@ -59,4 +59,31 @@ export interface ProjectData {
 }
 export interface ProjectPost {
   name: string;
+}
+
+export interface ProfileData {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  thumbnail: string;
+}
+
+export interface TokenProps {
+  token_type: string;
+  exp: number;
+  iat: number;
+  jti: string;
+  user_id: number;
+}
+
+export interface UserProps {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  thumbnail: string;
 }

@@ -1,3 +1,4 @@
+import { createContext, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Changepsw from "./components/changepsw/changepsw";
 import Forgot from "./components/forgot/forgot";
@@ -15,9 +16,35 @@ import LoginForm from "./components/loginForm/liginform";
 import ListComponent from "./components/list/list";
 import BoardView from "./components/boardView/boardView";
 import Filter from "./components/filter/filter";
+import { auth } from "./services/userService";
+import { TokenProps, UserProps } from "./types/types";
+import { jwtDecode } from "jwt-decode";
 
 const dummyHandleFilterClose = () => {};
+
 export default function App() {
+  const [currentUser, setCurrentUser] = useState<UserProps | {}>({});
+
+  useEffect(() => {
+    GetUser();
+    console.log(currentUser, "crr");
+  }, []);
+
+  const GetUser = async () => {
+    const token = localStorage.getItem("access");
+
+    try {
+      if (token) {
+        const decoded: TokenProps = jwtDecode(token);
+        const result = await auth(decoded.user_id);
+        setCurrentUser(result.data);
+        console.log(currentUser, "current");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const tasks = [
     {
       id: 1,
@@ -85,7 +112,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="/dashboard" element={<Card />} />
           <Route path="calendar" element={<Calendar />} />
-          <Route path="workspaces" element={<WorkSpaces />} />
+          {currentUser && <Route path="workspaces" element={<WorkSpaces />} />}
           <Route path="listview" element={<ListComponent />} />
           <Route path="boardview" element={<BoardView />} />
         </Route>

@@ -26,6 +26,7 @@ const LoginForm = () => {
       const loginResponseData = result.data as LoginResponse;
       localStorage.setItem("refresh", loginResponseData.refresh);
       localStorage.setItem("access", loginResponseData.access);
+      console.log("result", result);
       navigate("/dashboard/workspaces");
     } catch (e) {
       console.log("Error Occured!");
