@@ -7,7 +7,7 @@ import moment from "moment";
 import icons from "../../utils/icons/icons";
 import Button from "../common/button";
 
-const CalendarModal = () => {
+const CalendarModal = ({ handleClose2 }) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(true);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -112,11 +112,11 @@ const CalendarModal = () => {
   ];
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 backdrop-blur-[2px] z-10">
-      <div dir="rtl" className="bg-white w-[936px] h-[632px]">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 backdrop-blur-[2px] z-10 ">
+      <div dir="rtl" className="bg-white w-[936px] h-[632px] rounded-xl">
         {isCalendarOpen && (
           <>
-            <div className="grid grid-cols-2 justify-items-start p-5 py-8 border-b item-center">
+            <div className="grid grid-cols-2 justify-items-start p-5 py-8 border-b item-center ">
               <div>
                 <p className="text-2xl font-medium p-2">
                   زمان شروع: {startDate ? startDate.toString() : ""}
@@ -129,10 +129,7 @@ const CalendarModal = () => {
               </div>
             </div>
             <div className="flex justify-between">
-              <div
-                className="flex flex-col bg-[#f7f8f9]"
-                style={{ width: 293, height: 515 }}
-              >
+              <div className="flex flex-col bg-[#f7f8f9] rounded-s-xl w-[293px] h-[518px]">
                 <div className="flex justify-between px-6 py-3.5 items-center">
                   <p className="text-xl">امروز :</p>
                   <p className="text-base font-medium text-gray-500">{today}</p>
@@ -192,7 +189,7 @@ const CalendarModal = () => {
                 />
                 <div className="text-left ml-7 mt-3 ">
                   <Button
-                    onClick={handleCloseCalendar}
+                    onClick={handleClose2}
                     text="بستن"
                     className="text-left bg-[#208d8e] pl-10 rounded text-white text-xs font-normal py-1.5 hover:border-[#208d8e] hover:border hover:bg-white hover:text-[#208d8e]"
                     width="109px"

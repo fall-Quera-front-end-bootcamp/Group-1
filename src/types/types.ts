@@ -77,6 +77,15 @@ export interface TaskData {
   members: any[];
   created_at: string;
 }
+export interface TaskPost {
+  name: string;
+  description: string;
+  priority: string;
+  attachment: string;
+  thumbnail: string;
+  order: string;
+  
+}
 export type Project = {
   id: string;
   name: string;
