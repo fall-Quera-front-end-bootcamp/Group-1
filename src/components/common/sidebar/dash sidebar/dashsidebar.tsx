@@ -259,6 +259,8 @@ const Dashsidebar: React.FC = () => {
                                         setIdP(element.id);
                                         setId(item.id);
                                         setIdPName(element.name);
+                                        console.log(item.id, element.id);
+
                                         setDropdownProjectState(
                                           (prevState) => ({
                                             ...prevState,
@@ -336,7 +338,14 @@ const Dashsidebar: React.FC = () => {
         />
       )}
       {modalNewTask && (
-        <TaskForm modalNewTask={modalNewTask} handleClose={handleCloseModal} />
+        <TaskForm
+          modalNewTask={modalNewTask}
+          handleClose={handleCloseModal}
+          idPName={idPName}
+          id={id}
+          idP={idP}
+          handleChange={handleUpdate}
+        />
       )}
       {sharedProjectOpen && (
         <ShareProjectModal

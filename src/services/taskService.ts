@@ -1,4 +1,4 @@
-import { TaskData } from "../types/types";
+import { TaskData, TaskPost } from "../types/types";
 import http from "./httpService";
 
 export function taskGet(
@@ -16,10 +16,11 @@ export function taskGet(
   );
 }
 
-export function taskPost(payload: TaskData) {
+export function taskPost(payload: TaskPost , id:string , idP:string) {
   const accessToken = localStorage.getItem("access");
 
-  return http.post(`workspaces/`, payload, {
-    headers: { Authorization: `Bearer ${accessToken}` },
+  return http.post(`workspaces/${id}/projects/${idP}/boards/181/tasks/`, payload, {
+    headers: { Authorization: `Bearer ${accessToken}` ,  "Content-Type": "multipart/form-data"
+  },
   });
 }
