@@ -4,6 +4,7 @@ import icons from "../../utils/icons/icons";
 import CalendarModal from "../calendar/calendarModal";
 import PriorityCard from "../priority/priority";
 import { taskPost } from "../../services/taskService";
+import axios from "axios";
 
 type FormData = {
   name: string;
@@ -44,8 +45,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const [selectedColor1, setSelectedColor1] = useState("");
   const [selectedBorderColor1, setSelectedBorderColor1] = useState("");
   const [priority1, setPriority1] = useState("");
-  const [attachment, setAttachment] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [attachment, setAttachment] = useState<File | any>();
+  const [thumbnail, setThumbnail] = useState<File | any>();
 
   const handleState = (
     selectedColor: string,
@@ -82,54 +83,45 @@ const TaskForm: React.FC<TaskFormProps> = ({
   };
 
   const handleSubmitTask: SubmitHandler<FormData> = async (data) => {
-    console.log(data, "data");
+    data.attachment = attachment;
+    data.thumbnail = thumbnail;
+    console.log(data);
+    try {
+      const token = localStorage.getItem("access");
+      // Send formData to the server using Axios or any other HTTP client library
+      const response = await axios.post(
+        `http://185.8.174.74:8000/workspaces/${id}/projects/${idP}/boards/181/tasks/`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-    // const formData = new FormData();
-    // formData.append("name", name);
-    // formData.append("description", description);
-    // formData.append("priority", priority1);
-    // formData.append("order", "1");
-    // formData.append("attachment", attachment);
-    // formData.append("thumbnail", thumbnail);
-    // console.log(formData, "formdata");
-
-    // try {
-    //   const data = await taskPost(formData, id, idP);
-    //   console.log(data); // Handle successful response from the API
-    //   handleChange();
-    // } catch (error) {
-    //   console.error("Error Occurred:", error);
-    // }
-
-    // handleClose();
+      // console.log(response.data);
+    } catch (error) {
+      console.error("Error uploading files:", error);
+    }
   };
 
   const handleAttachmentChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     const fileContent = reader.result as string;
-    //     setAttachment(fileContent);
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
+    const files = event.target.files;
+    if (files) {
+      setAttachment(files[0]);
+    }
   };
 
   const handleThumbnailChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     const fileContent = reader.result as string;
-    //     setThumbnail(fileContent);
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
+    const files = event.target.files;
+    if (files) {
+      setThumbnail(files[0]);
+    }
   };
 
   return (
@@ -137,6 +129,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
       <form
         onSubmit={handleSubmit(handleSubmitTask)}
         className=" border rounded-3xl"
+        encType="multipart/form-data"
       >
         <div
           className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 backdrop-blur-[2px] z-10"
@@ -228,7 +221,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                   <p className="pr-1">آپلود فایل</p>
                 </label>
                 <input
-                  {...register("attachment")}
+                  // {...register("attachment")}
                   type="file"
                   onChange={handleAttachmentChange}
                   id="attachment"
@@ -249,7 +242,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                 <input
                   {...register("thumbnail")}
                   type="file"
-                  onChange={(e) => handleThumbnailChange(e)}
+                  onChange={handleThumbnailChange}
                   id="thumbnail"
                   className="w-full hidden"
                 />
