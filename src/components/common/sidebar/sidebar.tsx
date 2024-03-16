@@ -54,6 +54,10 @@ const SmartSidebar = () => {
               className={`flex justify-center items-center gap-1 bg-white p-1 px-2 rounded-md text-gray-500  ${
                 darkMode ? "bg-stone-500 text-white" : "bg-white text-black"
               }`}
+              onClick={() => {
+                localStorage.removeItem("access");
+                localStorage.removeItem("refresh");
+              }}
             >
               {icons.door("#818181", "20px")}
               خروج

@@ -64,6 +64,7 @@ const tasks = [
 ];
 
 export default function App() {
+  const token = localStorage.getItem("access");
   return (
     <Router>
       <DarkModeProvider>
@@ -84,6 +85,7 @@ export default function App() {
               }
             />
           </Route>
+
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="/dashboard" element={<Card />} />
             <Route path="calendar" element={<Calendar />} />
@@ -97,6 +99,7 @@ export default function App() {
               element={<BoardView />}
             />
           </Route>
+
           <Route path="/profile" element={<Dashboard />}>
             <Route path="/profile" element={<PersonalInf />} />
             <Route path="info/account" element={<ProfileForm />} />

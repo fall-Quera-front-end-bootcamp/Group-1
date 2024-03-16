@@ -17,6 +17,10 @@ export function forgetPassword(payload: ForgetPasswordData) {
   return http.post("accounts/reset-password/", payload);
 }
 
+export function getUser(payload: number) {
+  return http.get(`accounts/${payload}`);
+}
+
 export default {
   register,
   login,
