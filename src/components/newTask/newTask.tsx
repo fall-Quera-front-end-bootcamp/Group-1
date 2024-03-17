@@ -21,6 +21,7 @@ interface TaskFormProps {
   id: string;
   idP: string;
   handleChange: () => void;
+  bId: string;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({
@@ -30,6 +31,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   id,
   idP,
   handleChange,
+  bId,
 }) => {
   const {
     register,
@@ -90,7 +92,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
       const token = localStorage.getItem("access");
       // Send formData to the server using Axios or any other HTTP client library
       const response = await axios.post(
-        `http://185.8.174.74:8000/workspaces/${id}/projects/${idP}/boards/181/tasks/`,
+        `http://185.8.174.74:8000/workspaces/${id}/projects/${idP}/boards/${bId}/tasks/`,
         data,
         {
           headers: {
@@ -99,6 +101,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
           },
         }
       );
+      handleChange();
 
       // console.log(response.data);
     } catch (error) {
@@ -139,7 +142,14 @@ const TaskForm: React.FC<TaskFormProps> = ({
             <div className="flex justify-between items-center mx-6 my-6">
               <div className="flex justify-between items-center">
                 <span className="bg-gray-300 mx-1 w-[16px] h-[16px] rounded ml-2"></span>
-                <h2 className=" text-2xl font-medium">عنوان تسک</h2>
+                <h2
+                  className=" text-2xl font-medium"
+                  onClick={() => {
+                    console.log(bId);
+                  }}
+                >
+                  عنوان تسک
+                </h2>
               </div>
               <button onClick={handleClose}>
                 {icons.close("#BDBDBD", "32px")}
