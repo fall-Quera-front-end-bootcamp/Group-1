@@ -90,3 +90,15 @@ export type Project = {
   id: string;
   name: string;
 };
+export interface BoardPost {
+  name: string;
+  color: string;
+  order:string;
+  is_archive: boolean;
+}
+
+
+export type Board = {
+  id: string;
+  name: string;
+};

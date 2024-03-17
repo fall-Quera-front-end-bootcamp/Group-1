@@ -28,3 +28,10 @@ export function deleteProjects( idP:string,id: string) {
         headers: { 'Authorization': `Bearer ${accessToken}` }
     });
 }
+
+export function projectsId(wid :string, pid:string) {
+    const accessToken = localStorage.getItem("access");
+    return http.get(`workspaces/${wid}/projects/${pid}/`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+}

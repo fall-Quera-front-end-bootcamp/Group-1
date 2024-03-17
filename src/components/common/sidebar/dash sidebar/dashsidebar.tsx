@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import icons from "../../../../utils/icons/icons";
 import NewWorkSpace from "./components/newWorkSpace/newWorkSpace";
 import NewProject from "./components/newProject/newProject";
-import { Project, WorkSpacesData } from "../../../../types/types";
+import { Board, Project, WorkSpacesData } from "../../../../types/types";
 import { workSpaces } from "../../../../services/workSpaceService";
 import { projects } from "../../../../services/projectService";
 import WorkSpaceDropDown from "./components/workSpaceDrop/wsDropDown";
@@ -14,6 +14,7 @@ import ProjectDropDown from "./components/projectDropDown/projectDropDown";
 import ShareProjectModal from "../../../shareProject/shareProject";
 import UpdateNameProject from "./components/projectNameUpdate/projectNameUpdate";
 import LinkButton from "../../button/linkButton";
+import { boardGet } from "../../../../services/boardServices";
 
 const Dashsidebar: React.FC = () => {
   const [isListVisible, setListVisible] = useState(true);
@@ -26,7 +27,6 @@ const Dashsidebar: React.FC = () => {
   const [sharedOpen, setSharedOpen] = useState(false);
   const [sharedProjectOpen, setSharedProjectOpen] = useState(false);
   const [modalUpdateNameProject, setModalUpdateNameProject] = useState(false);
-
   const [itemVisibility, setItemVisibility] = useState<{
     [key: number]: boolean;
   }>({});
@@ -43,6 +43,8 @@ const Dashsidebar: React.FC = () => {
     [key: string]: boolean;
   }>({});
   const [update, setUpdate] = useState(0);
+  const [boardData, setBoardData] = useState<Board[]>([]);
+  const [boardId, setBoardId] = useState("");
 
   useEffect(() => {
     workSpaces()
@@ -67,6 +69,23 @@ const Dashsidebar: React.FC = () => {
       }
     }
     setWorkSpaceData(data);
+  };
+
+  useEffect(() => {
+    boardGet(id, idP)
+      .then((response) => {
+        setBoardData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching workspaces:", error);
+        console.log(error);
+      });
+  }, [id, idP]);
+
+  const handleBoard = () => {
+    boardData.map((item) => {
+      setBoardId(item.id);
+    });
   };
 
   const toggleListVisibility = () => {
@@ -260,7 +279,7 @@ const Dashsidebar: React.FC = () => {
                                         setId(item.id);
                                         setIdPName(element.name);
                                         console.log(item.id, element.id);
-
+                                        handleBoard();
                                         setDropdownProjectState(
                                           (prevState) => ({
                                             ...prevState,
@@ -345,6 +364,7 @@ const Dashsidebar: React.FC = () => {
           id={id}
           idP={idP}
           handleChange={handleUpdate}
+          bId={boardId}
         />
       )}
       {sharedProjectOpen && (

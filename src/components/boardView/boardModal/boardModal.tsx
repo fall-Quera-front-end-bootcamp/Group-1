@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-import icons from "../../../../../../utils/icons/icons";
-import { putWorkSpace } from "../../../../../../services/workSpaceService";
-
-interface UpdateNameWSProps {
-  modalUpdateColorWS?: boolean;
-  handleClose(): void;
-  id: string;
-  name: string;
+import icons from "../../../utils/icons/icons";
+import { boardPost } from "../../../services/boardServices";
+interface BoardModalProps {
+  wid: string;
+  pid: string;
+  handleClose: () => void;
+  modal?: boolean;
   handleChange: () => void;
 }
-const UpdateNameWS: React.FC<UpdateNameWSProps> = ({
-  modalUpdateColorWS,
+const BoardModal: React.FC<BoardModalProps> = ({
+  wid,
+  pid,
   handleClose,
-  id,
-  name,
   handleChange,
 }) => {
+  const [name, setName] = useState("");
   const colors = [
     "#4C6EF5",
     "#228BE6",
@@ -33,12 +32,17 @@ const UpdateNameWS: React.FC<UpdateNameWSProps> = ({
   ];
 
   const [selectedColor, setSelectedColor] = useState("");
-  const [color, setColor] = useState({ color: "" });
+  const [color, setColor] = useState("");
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
-    setColor({ color: color });
+    setColor(color);
   };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
   const handleOverlayClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -46,32 +50,47 @@ const UpdateNameWS: React.FC<UpdateNameWSProps> = ({
       handleClose();
     }
   };
+
   const handleSubmit = async () => {
-    const userData = { color: color.color, name: name };
+    const userData = {
+      name: name,
+      color: color,
+      order: "1",
+      is_archive: true,
+    };
     try {
-      const result = await putWorkSpace(userData, id);
-      handleChange();
+      const result = await boardPost(userData, wid, pid);
       console.log(result);
+      handleChange();
     } catch (e) {
       console.log("Error Occured!");
       console.log(e);
     }
-    handleClose();
-  };
 
+    handleClose();
+    console.log(userData);
+  };
   return (
     <div
       className="fixed inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 backdrop-blur-[2px] z-10"
       onClick={handleOverlayClick}
     >
-      <div className="bg-white py-5 px-10 rounded-xl w-[501px]  flex flex-col justify-between items-center">
-        <div className="flex items-center gap-x-20 mb-5 self-start">
+      <div className="bg-white py-5 px-10 rounded-xl w-[501px]  flex flex-col justify-between items-stretch">
+        <div className="flex items-center gap-x-[110px] mb-5">
           <button onClick={handleClose}>{icons.close("black", "20px")}</button>
-          <div className="text-2xl font-bold">ویرایش رنگ ورک‌اسپیس</div>
+          <div className="text-2xl font-bold">ساختن بُرد جدید</div>
         </div>
         <div>
-          <p className="text-sm font-normal mb-3">رنگ ورک اسپیس</p>
-          <div className="flex flex-wrap items-center justify-start mb-8">
+          <h5 className="mb-1">نام برد</h5>
+          <input
+            type="text"
+            onChange={handleInput}
+            className="border border-gray-400 rounded-md px-3 py-2 mb-4 w-full"
+          />
+        </div>
+        <div>
+          <p className="text-sm font-normal mb-3">رنگ برد</p>
+          <div className="flex flex-wrap items-center justify-center mb-8">
             {colors.map((color, index) => (
               <div
                 key={index}
@@ -85,11 +104,10 @@ const UpdateNameWS: React.FC<UpdateNameWSProps> = ({
           </div>
         </div>
         <button className="button-nws py-[6px] w-full" onClick={handleSubmit}>
-          ویرایش رنگ ورک‌اسپیس
+          ساختن برد
         </button>
       </div>
     </div>
   );
 };
-
-export default UpdateNameWS;
+export default BoardModal;
