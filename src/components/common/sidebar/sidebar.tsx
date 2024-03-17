@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Dashsidebar from "./dash sidebar/dashsidebar";
 import Profilesidebar from "./profile sidebar/profilesidebar";
 import icons from "../../../utils/icons/icons";
@@ -7,6 +7,7 @@ import { useDarkMode } from "../../common/darkmode/DarkModeContext";
 
 const SmartSidebar = () => {
   const [side, setSide] = useState("dashboard");
+  const navigate = useNavigate();
   const currentUrl = useLocation();
   const { darkMode, setDarkMode } = useDarkMode();
 
@@ -57,6 +58,7 @@ const SmartSidebar = () => {
               onClick={() => {
                 localStorage.removeItem("access");
                 localStorage.removeItem("refresh");
+                navigate("/");
               }}
             >
               {icons.door("#818181", "20px")}

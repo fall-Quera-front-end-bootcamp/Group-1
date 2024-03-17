@@ -7,7 +7,7 @@ const ProfileForm: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // اینجا می‌توانید فرآیند ارسال اطلاعات را انجام دهید
     console.log({
@@ -26,7 +26,7 @@ const ProfileForm: React.FC = () => {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       className="w-[354px] py-3 pr-1 flex flex-col mx-6"
     >
       <h2 className="text-right mt-3 mb-10 font-bold" style={{ fontSize: 31 }}>
