@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import icons from "../../../../../../utils/icons/icons";
-import { postProjects } from "../../../../../../services/projectService";
+import { putWorkSpace } from "../../../../../../services/workSpaceService";
 
-interface NewProjectProps {
-  modalOpenPro?: boolean;
+interface UpdateNameWSProps {
+  modalUpdateWS?: boolean;
   handleClose(): void;
   id: string;
+  namee: string;
   handleChange: () => void;
 }
-const NewProject: React.FC<NewProjectProps> = ({
-  modalOpenPro,
+const UpdateNameWS: React.FC<UpdateNameWSProps> = ({
+  modalUpdateWS,
   handleClose,
   id,
+  namee,
   handleChange,
 }) => {
   const [name, setName] = useState({ name: "" });
@@ -32,7 +34,7 @@ const NewProject: React.FC<NewProjectProps> = ({
       name: name.name,
     };
     try {
-      const result = await postProjects(id, userData);
+      const result = await putWorkSpace(userData, id);
       handleChange();
       console.log(result);
     } catch (e) {
@@ -49,24 +51,25 @@ const NewProject: React.FC<NewProjectProps> = ({
       onClick={handleOverlayClick}
     >
       <div className="bg-white py-5 px-10 rounded-xl w-[501px]  flex flex-col justify-between items-stretch">
-        <div className="flex items-center gap-x-[105px] mb-5">
+        <div className="flex items-center gap-x-20 mb-5">
           <button onClick={handleClose}>{icons.close("black", "20px")}</button>
-          <div className="text-2xl font-bold">ساختن پروژه جدید</div>
+          <div className="text-2xl font-bold">ویرایش نام ورک‌اسپیس</div>
         </div>
         <div>
-          <h5 className="mb-1">نام پروژه </h5>
+          <h5 className="mb-1">نام ورک اسپیس</h5>
           <input
+            defaultValue={namee}
             type="text"
             onChange={handleInput}
             className="border border-gray-400 rounded-md px-3 py-2 mb-8 w-full"
           />
         </div>
         <button className="button-nws py-[6px] w-full" onClick={handleSubmit}>
-          ساختن پروژه
+          ویرایش نام ورک‌اسپیس
         </button>
       </div>
     </div>
   );
 };
 
-export default NewProject;
+export default UpdateNameWS;

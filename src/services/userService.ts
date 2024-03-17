@@ -1,14 +1,9 @@
 import http from "./httpService";
-import * as endpoint from "../config.json";
 import {
   ForgetPasswordData,
   LoginFormData,
   SignupFormData,
 } from "../types/types";
-
-const { apiUrl } = endpoint;
-
-const apiEndpoint = apiUrl;
 
 export function register(payload: SignupFormData) {
   return http.post("accounts/", payload);
@@ -20,6 +15,10 @@ export function login(payload: LoginFormData) {
 
 export function forgetPassword(payload: ForgetPasswordData) {
   return http.post("accounts/reset-password/", payload);
+}
+
+export function getUser(payload: number) {
+  return http.get(`accounts/${payload}`);
 }
 
 export default {

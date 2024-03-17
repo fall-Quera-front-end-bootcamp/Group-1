@@ -41,3 +41,64 @@ export interface RefreshTokenResponse {
   access: string;
   refresh: string;
 }
+
+export interface WorkSpacesData {
+  id: string;
+  name: string;
+  color: string;
+  projects: any;
+}
+export interface WorkSpacesPost {
+  name: string;
+  color: string;
+}
+export interface WorkSpacesPut {
+  name?: string;
+  color?: string;
+}
+export interface ProjectData {
+  id: string;
+  name: string;
+  workspaceId: string;
+}
+export interface ProjectPost {
+  name: string;
+}
+
+export interface TaskData {
+  id: number;
+  name: string;
+  description: string;
+  deadline: string;
+  priority: number;
+  attachment: string;
+  thumbnail: string;
+  order: number;
+  members: any[];
+  created_at: string;
+}
+export interface TaskPost {
+  name: string;
+  description: string;
+  priority: string;
+  attachment: string;
+  thumbnail: string;
+  order: string;
+  
+}
+export type Project = {
+  id: string;
+  name: string;
+};
+export interface BoardPost {
+  name: string;
+  color: string;
+  order:string;
+  is_archive: boolean;
+}
+
+
+export type Board = {
+  id: string;
+  name: string;
+};

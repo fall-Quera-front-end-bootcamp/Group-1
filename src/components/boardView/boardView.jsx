@@ -1,32 +1,65 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import icons from "../../utils/icons/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Card from "../task/task";
-import ReactDOM from "react-dom";
+import config from "../../config.json";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useDarkMode } from "../common/darkmode/DarkModeContext";
+import BoardModal from "./boardModal/boardModal";
+import TaskForm from "../newTask/newTask";
+import { projectsId } from "../../services/projectService";
 
 function BoardView() {
-  const [state, setState] = useState([
-    getItems(3),
-    getItems(1),
-    getItems(1),
-    getItems(1),
-    getItems(1),
-    getItems(1),
-  ]);
+  const { wid, pid } = useParams();
+  const [boards, setBoards] = useState([]);
+  const [state, setState] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [modalNewTask, setModalNewTask] = useState(false);
+  const [pro, setPro] = useState({});
+  const [name, setName] = useState("");
 
-  // useEffect(() => {
-  //   const container = document.getElementById("root");
-  //   ReactDOM.render(<BoardView />, container);
-  // }, []);
+  const [update, setUpdate] = useState(0);
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
 
-  // fake data generator
-  function getItems(count, offset = 0) {
-    return Array.from({ length: count }, (_, k) => ({
-      id: `item-${k + offset}-${new Date().getTime()}`,
-      content: <Card />, // Render your Card component here instead of fake data
-    }));
-  }
+  const handleCloseModal = () => {
+    setModal(false);
+    setModalNewTask(false);
+  };
+  const { darkMode } = useDarkMode();
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access");
 
+    axios
+      .get(config.apiUrl + `/workspaces/${wid}/projects/${pid}/boards/`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((response) => {
+        setBoards(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [wid, pid, update]);
+
+  useEffect(() => {
+    projectsId(wid, pid)
+      .then((response) => {
+        setPro(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching workspaces:", error);
+        console.log(error);
+      });
+  }, [pid, wid]);
+
+  const handlePro = () => {
+    setName(pro.name);
+  };
+
+  const handleUpdate = () => {
+    setUpdate(update + 1);
+  };
   function reorder(list, startIndex, endIndex) {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -90,164 +123,108 @@ function BoardView() {
     // Update the state
     setState(newState);
   }
+  console.log();
   return (
-    <div dir="rtl" className="flex gap-5">
-      <DragDropContext onDragEnd={onDragEnd}>
-        {/* First column - Open */}
-        <Droppable droppableId="0">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex flex-col items-center"
-            >
-              <div className="flex items-center justify-between w-[250px] h-[40px] font-bold  border border-t-[3px] rounded-2xl border-t-[#FD7E14] border-[#D2D6DC] my-4 px-2">
-                <p>Open</p>
-                <div className="flex items-center">
-                  {icons.dots("#323232", "24px")}
-                  {icons.plus("#323232", "24px")}
+    <>
+      <div dir="rtl" className="flex gap-5">
+        <DragDropContext onDragEnd={onDragEnd}>
+          {boards.length > 0 ? (
+            <Droppable droppableId="0">
+              {(provided) =>
+                boards.map((board) => {
+                  return (
+                    <div
+                      key={board.id}
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className="flex flex-col items-center"
+                    >
+                      <div
+                        className={`flex items-center justify-between w-[250px] h-[40px] font-bold  border  rounded-2xl  border-[#D2D6DC] my-4 px-2 ${
+                          darkMode
+                            ? "border-t-black bg-stone-500 text-white border-[#D2D6DC]"
+                            : ""
+                        }`}
+                        style={{ borderTop: `3px solid ${board.color}` }}
+                      >
+                        <p>{board.name}</p>
+                        <button className="flex items-center">
+                          {icons.dots("#323232", "24px")}
+                          {icons.plus("#323232", "24px")}
+                        </button>
+                      </div>
+                      {board.tasks.map((item, index) => (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                            >
+                              <Card {...item} />
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      <button
+                        className="my-1  border-2 border-[#208d8e] text-[#208d8e] rounded-lg p-1 w-[250px] hover:bg-[#208d8e] hover:text-white"
+                        onClick={() => {
+                          setModalNewTask(true);
+                          setSelectedBoardId(board.id);
+                          handlePro();
+                        }}
+                      >
+                        ساختن تسک جدید
+                      </button>
+                      {provided.placeholder}
+                    </div>
+                  );
+                })
+              }
+            </Droppable>
+          ) : (
+            <div>
+              <button
+                onClick={() => {
+                  setModal(true);
+                }}
+              >
+                <div
+                  className="flex items-center justify-start w-[250px] h-[40px] font-bold  border  rounded-2xl  my-4 px-2"
+                  style={{ boxShadow: "0px 3px 4px 0px rgba(0, 0, 0, 0.2)" }}
+                >
+                  {icons.plus("black", "20px")}
+                  <p>ساختن برد جدید</p>
                 </div>
-              </div>
-              {/* Draggable Card for the first column */}
-              {state[0].map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+              </button>
             </div>
           )}
-        </Droppable>
-
-        {/* Second column - In Progress */}
-        <Droppable droppableId="1">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex flex-col items-center"
-            >
-              <div className="flex items-center justify-between w-[250px] h-[40px] font-bold  border border-t-[3px] rounded-2xl border-t-[#4C6EF5] border-[#D2D6DC] my-4 px-2">
-                <p>In Progress</p>
-              </div>
-              {/* Draggable Card for the second column */}
-              {state[1].map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-
-        {/* third column - Pending */}
-        <Droppable droppableId="2">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex flex-col items-center"
-            >
-              <div className="flex items-center justify-between w-[250px] h-[40px] font-bold  border border-t-[3px] rounded-2xl border-t-[#FAB005] border-[#D2D6DC] my-4 px-2">
-                <p>In Progress</p>
-              </div>
-              {/* Draggable Card for the third column */}
-              {state[2].map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-
-        {/* fourth column - To Do */}
-        <Droppable droppableId="3">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex flex-col items-center"
-            >
-              <div className="flex items-center justify-between w-[250px] h-[40px] font-bold  border border-t-[3px] rounded-2xl border-t-[#FD7E14] border-[#D2D6DC] my-4 px-2">
-                <p>To Do</p>
-              </div>
-              {/* Draggable Card for the fourth column */}
-              {state[3].map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-
-        {/* fifth column - Done */}
-        <Droppable droppableId="4">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="flex flex-col items-center"
-            >
-              <div className="flex items-center justify-between w-[250px] h-[40px] font-bold  border border-t-[3px] rounded-2xl border-t-[#40C057] border-[#D2D6DC] my-4 px-2">
-                <p>Done</p>
-              </div>
-              {/* Draggable Card for the fifth column */}
-              {state[4].map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                    >
-                      {item.content}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+        </DragDropContext>
+      </div>
+      {modal && (
+        <BoardModal
+          handleClose={handleCloseModal}
+          modal={modal}
+          wid={wid}
+          pid={pid}
+          handleChange={handleUpdate}
+        />
+      )}
+      {modalNewTask && (
+        <TaskForm
+          id={wid}
+          idP={pid}
+          handleClose={handleCloseModal}
+          handleChange={handleUpdate}
+          bId={selectedBoardId}
+          idPName={name}
+        />
+      )}
+    </>
   );
 }
 
