@@ -7,7 +7,7 @@ const Profilesidebar: React.FC = () => {
     <div dir="rtl" className="flex flex-col items-start" style={{ width: 266 }}>
       <button
         onClick={() => {
-          navigate("/profile");
+          navigate(-1);
         }}
         className="si-back my-6 mb-10 font-medium flex justify-center items-center gap-1"
       >

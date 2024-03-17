@@ -21,7 +21,7 @@ const WorkSpaces: React.FC = () => {
         console.error("Error fetching workspaces:", error);
         console.log(error);
       });
-  }, []);
+  }, [update]);
 
   const getProjects = async (workspaces: WorkSpacesData[]) => {
     const data: WorkSpacesData[] = [];

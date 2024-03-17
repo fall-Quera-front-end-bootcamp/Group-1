@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Dashsidebar from "./dash sidebar/dashsidebar";
 import Profilesidebar from "./profile sidebar/profilesidebar";
 import icons from "../../../utils/icons/icons";
@@ -24,8 +24,8 @@ const SmartSidebar = () => {
   return (
     <div
       dir="rtl"
-      className={`flex flex-col justify-between item-center bg-white p-4 border-l-2 absolute top-0  w-[340px] h-[100vh] ${
-        darkMode ? "bg-stone-500" : ""
+      className={`flex flex-col justify-between item-center  p-4 border-l-2 absolute top-0  w-[340px] h-[100vh] ${
+        darkMode ? "bg-stone-500" : "bg-white"
       }`}
     >
       <div className="flex flex-col">
@@ -45,9 +45,14 @@ const SmartSidebar = () => {
       {side === "dashboard" && (
         <div>
           <div>
-            <button className="flex justify-start items-center gap-1 mb-5 mr-2">
+            <button
+              className="flex justify-start items-center gap-1 mb-5 mr-2"
+              onClick={() => {
+                navigate("/profile");
+              }}
+            >
               <span className="sq1"></span>
-              <p>نیلوفر</p>
+              <p>فرزاد</p>
             </button>
           </div>
           <div className="flex justify-between">

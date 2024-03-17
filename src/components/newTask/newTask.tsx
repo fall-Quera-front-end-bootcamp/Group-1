@@ -107,6 +107,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
     } catch (error) {
       console.error("Error uploading files:", error);
     }
+    handleClose();
   };
 
   const handleAttachmentChange = (
